@@ -1,0 +1,26 @@
+time_features:
+  - 'hour_of_day'
+  - 'day_of_week'
+  - 'month'
+  - 'is_weekend'
+  - 'is_holiday'
+  - 'peak_hour_indicator'
+location_features:
+  - 'grid_id_latitude'
+  - 'grid_id_longitude'
+  - 'poi_density'
+  - 'traffic_density_past_hour'
+weather_features:
+  - 'temperature'
+  - 'precipitation'
+  - 'wind_speed'
+  - 'weather_condition_code'
+demand_history_features:
+  - 'demand_last_15min'
+  - 'demand_last_30min'
+  - 'demand_last_hour'
+  - 'demand_same_hour_last_day'
+target_variable: 'future_demand_next_15min'
+feature_engineering:
+  grid_size_km: 1.0
+  lookback_windows_min: [15, 30, 60, 1440] # 15min, 30min, 1hr, 24hr

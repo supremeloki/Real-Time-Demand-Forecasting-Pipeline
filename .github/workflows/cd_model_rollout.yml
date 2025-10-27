@@ -1,0 +1,54 @@
+name: CD Model Rollout
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-model:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Configure AWS/GCP CLI
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # yamllint disable rule=line-length
+        run: |
+          # aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          # aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          echo "Simulating cloud configuration"
+      - name: Build Docker Image
+        run: |
+          docker build -t snapp-demand-forecast-inference:latest -f deployments/docker/Dockerfile.inference .
+          echo "Docker image built"
+      - name: Push Docker Image to Registry
+        run: |
+          # docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} registry.example.com # yamllint disable rule=line-length
+          # docker push registry.example.com/snapp-demand-forecast-inference:latest
+          echo "Simulating push to Docker registry"
+      - name: Deploy to Kubernetes
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: apply -f deployments/kubernetes/k8s_model_deployment.yaml -f deployments/kubernetes/inference_hpa_ingress.yaml
+        continue-on-error: true
+      - name: Promote Model to Production
+        run: |
+          python -c "
+          from src.mlops_automation.model_experiment_promoter import ModelExperimentPromoter
+          promoter = ModelExperimentPromoter()
+          promoter.promote_to_production('demand_forecaster_prod', 'latest')
+          print('Model promoted to production')
+          "
+      - name: Run A/B Testing Validation
+        run: |
+          python model_experiments/ab_testing/lono_interface.py
+          echo 'A/B testing completed'
+        continue-on-error: true

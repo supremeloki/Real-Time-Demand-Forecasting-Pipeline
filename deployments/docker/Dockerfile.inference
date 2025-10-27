@@ -1,0 +1,14 @@
+FROM python:3.10-slim-bookworm
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src /app/src
+COPY conf /app/conf
+COPY model_registry /app/model_registry
+COPY data_artifacts/sample_data/batch_processed_features.csv /app/data_artifacts/sample_data/batch_processed_features.csv
+RUN mkdir -p /tmp/mlruns_dev/0/dummy_run_id/artifacts/demand_forecaster_model/
+RUN echo "{}" > /tmp/mlruns_dev/0/dummy_run_id/artifacts/demand_forecaster_model/model.json
+ENV PYTHONPATH=/app
+ENV APP_ENV=prod
+EXPOSE 80
+CMD ["uvicorn", "src.model_serving.api_app:app", "--host", "0.0.0.0", "--port", "80", "--workers", "4"]

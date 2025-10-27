@@ -1,0 +1,17 @@
+kafka:
+  bootstrap_servers: 'localhost:9092'
+  input_topic: 'snapp-demand-events-dev'
+  output_topic: 'snapp-forecasts-dev'
+spark:
+  master: 'local[*]'
+  app_name: 'SnappDemandForecasterDev'
+model_registry:
+  uri: 'file:///tmp/mlruns_dev'
+  model_name: 'demand_forecaster_dev'
+inference_api:
+  host: '0.0.0.0'
+  port: 8000
+data_paths:
+  synthetic_data: 'data_artifacts/sample_data/synthetic_snapp_data_dev.csv'
+logging:
+  level: 'DEBUG'

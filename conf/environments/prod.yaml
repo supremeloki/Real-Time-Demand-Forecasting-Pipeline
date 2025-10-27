@@ -1,0 +1,21 @@
+kafka:
+  bootstrap_servers: 'kafka-broker-1:9092,kafka-broker-2:9092'
+  input_topic: 'snapp-demand-events-prod'
+  output_topic: 'snapp-forecasts-prod'
+spark:
+  master: 'yarn'
+  app_name: 'SnappDemandForecasterProd'
+  configs:
+    spark.executor.instances: '10'
+    spark.executor.memory: '8g'
+    spark.driver.memory: '4g'
+model_registry:
+  uri: 'postgresql://mlflow_user:password@mlflow-db:5432/mlflow_db'
+  model_name: 'demand_forecaster_prod'
+inference_api:
+  host: '0.0.0.0'
+  port: 80
+data_paths:
+  feature_store_table: 'snapp_analytics.demand_features'
+logging:
+  level: 'INFO'

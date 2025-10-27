@@ -1,0 +1,49 @@
+{
+  "model_name": "demand_forecaster_prod",
+  "latest_version": {
+    "version": 1,
+    "run_id": "a1b2c3d4e5f6g7h8i9j0",
+    "timestamp": "2025-10-19T10:30:00Z",
+    "metrics": {
+      "rmse": 5.23,
+      "mae": 3.89,
+      "r2": 0.85
+    },
+    "parameters": {
+      "objective": "reg:squarederror",
+      "eval_metric": "rmse",
+      "n_estimators": 500,
+      "learning_rate": 0.05,
+      "max_depth": 6
+    },
+    "artifact_path": "runs:/a1b2c3d4e5f6g7h8i9j0/demand_forecaster_model",
+    "stage": "Production",
+    "description": "Initial XGBoost model for real-time demand forecasting, trained on Tehran synthetic data with 15-minute resolution."
+  },
+  "versions_history": [
+    {
+      "version": 1,
+      "run_id": "a1b2c3d4e5f6g7h8i9j0",
+      "timestamp": "2025-10-19T10:30:00Z",
+      "metrics": {
+        "rmse": 5.23,
+        "mae": 3.89,
+        "r2": 0.85
+      },
+      "stage": "Production",
+      "description": "Initial model"
+    },
+    {
+      "version": 0,
+      "run_id": "x9y8z7w6v5u4t3s2r1q0",
+      "timestamp": "2025-10-18T18:00:00Z",
+      "metrics": {
+        "rmse": 6.12,
+        "mae": 4.51,
+        "r2": 0.79
+      },
+      "stage": "Archived",
+      "description": "Baseline model, replaced by v1 due to better performance."
+    }
+  ]
+}

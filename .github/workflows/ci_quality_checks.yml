@@ -1,0 +1,77 @@
+name: CI Quality Checks
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Black formatter check
+        run: black --check src/
+      - name: Run Flake8 linter
+        run: flake8 src/
+      - name: Run Pytest
+        run: pytest tests/
+      - name: Run MyPy type checking
+        run: mypy src/ --ignore-missing-imports
+      - name: Check YAML syntax
+        run: |
+          python -c "
+          import yaml, os
+          for root, dirs, files in os.walk('.'):
+              dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['.git', '__pycache__']]
+              for file in files:
+                  if file.endswith('.yaml') or file.endswith('.yml'):
+                      try:
+                          with open(os.path.join(root, file), 'r') as f:
+                              yaml.safe_load(f)
+                      except yaml.YAMLError as e:
+                          print(f'YAML error in {os.path.join(root, file)}: {e}')
+                          exit(1)
+          print('All YAML files are valid.')
+          "
+      - name: Check JSON syntax
+        run: |
+          python -c "
+          import json, os
+          for root, dirs, files in os.walk('.'):
+              dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['.git', '__pycache__']]
+              for file in files:
+                  if file.endswith('.json'):
+                      try:
+                          with open(os.path.join(root, file), 'r') as f:
+                              json.load(f)
+                      except json.JSONDecodeError as e:
+                          print(f'JSON error in {os.path.join(root, file)}: {e}')
+                          exit(1)
+          print('All JSON files are valid.')
+          "
+      - name: Validate Python imports
+        run: |
+          python -c "
+          import ast, os
+          errors = []
+          for root, dirs, files in os.walk('src'):
+              for file in files:
+                  if file.endswith('.py'):
+                      try:
+                          with open(os.path.join(root, file), 'r') as f:
+                              ast.parse(f.read())
+                      except SyntaxError as e:
+                          errors.append(f'Syntax error in {os.path.join(root, file)}: {e}')
+          if errors:
+              for error in errors:
+                  print(error)
+              exit(1)
+          print('All Python files have valid syntax.')
+          "

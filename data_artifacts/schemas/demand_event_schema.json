@@ -1,0 +1,165 @@
+{
+  "title": "DemandEvent",
+  "type": "object",
+  "properties": {
+    "event_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of the event in ISO 8601 format."
+    },
+    "pickup_latitude": {
+      "type": "number",
+      "format": "float",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude of the ride pickup location."
+    },
+    "pickup_longitude": {
+      "type": "number",
+      "format": "float",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude of the ride pickup location."
+    },
+    "dropoff_latitude": {
+      "type": "number",
+      "format": "float",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude of the ride dropoff location."
+    },
+    "dropoff_longitude": {
+      "type": "number",
+      "format": "float",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude of the ride dropoff location."
+    },
+    "hour_of_day": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 23,
+      "description": "Hour of the day (0-23) when the event occurred."
+    },
+    "day_of_week": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6,
+      "description": "Day of the week (0=Monday, 6=Sunday)."
+    },
+    "is_weekend": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "Binary indicator for weekend (1 if weekend, 0 otherwise)."
+    },
+    "is_holiday": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "Binary indicator for a public holiday (1 if holiday, 0 otherwise)."
+    },
+    "peak_hour_indicator": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "Binary indicator for peak hours (1 if peak, 0 otherwise)."
+    },
+    "demand_at_pickup": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Simulated demand intensity at the pickup location and time."
+    },
+    "month": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12,
+      "description": "Month of the year (1-12)."
+    },
+    "grid_id_latitude": {
+      "type": "number",
+      "format": "float",
+      "description": "Latitude component of the geohash grid identifier."
+    },
+    "grid_id_longitude": {
+      "type": "number",
+      "format": "float",
+      "description": "Longitude component of the geohash grid identifier."
+    },
+    "poi_density": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Density of points of interest in the area."
+    },
+    "traffic_density_past_hour": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Traffic density in the area over the past hour."
+    },
+    "temperature": {
+      "type": "number",
+      "format": "float",
+      "description": "Current temperature in Celsius."
+    },
+    "precipitation": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Precipitation amount in mm."
+    },
+    "wind_speed": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Wind speed in km/h."
+    },
+    "weather_condition_code": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 999,
+      "description": "Weather condition code (e.g., 800 for clear sky)."
+    },
+    "demand_last_15min": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Demand in the same area 15 minutes ago."
+    },
+    "demand_last_30min": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Demand in the same area 30 minutes ago."
+    },
+    "demand_last_hour": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Demand in the same area 1 hour ago."
+    },
+    "demand_same_hour_last_day": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Demand in the same area at the same hour yesterday."
+    },
+    "future_demand_next_15min": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Predicted demand for the next 15 minutes (target variable)."
+    }
+  },
+  "required": [
+    "event_timestamp",
+    "pickup_latitude",
+    "pickup_longitude",
+    "dropoff_latitude",
+    "dropoff_longitude",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend",
+    "is_holiday",
+    "peak_hour_indicator",
+    "demand_at_pickup"
+  ]
+}

@@ -1,0 +1,59 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: demand-forecaster-hpa
+  namespace: snapp-ml
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: snapp-demand-forecaster-api # Refers to the existing model deployment
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Pods # Custom metric example (requires Prometheus Adapter/external metrics API)
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "100" # Target 100 requests/sec per pod
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demand-forecaster-ingress
+  namespace: snapp-ml
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+spec:
+  ingressClassName: nginx # Assuming NGINX Ingress Controller
+  rules:
+  - host: api.snapptech.ai
+    http:
+      paths:
+      - path: /forecast
+        pathType: Prefix
+        backend:
+          service:
+            name: snapp-demand-forecaster-api-service # Refers to the existing service
+            port:
+              number: 80
+  tls: # Optional: Enable TLS for secure communication
+  - hosts:
+    - api.snapptech.ai
+    secretName: snapptech-tls-secret # Kubernetes secret containing TLS certificate and key
