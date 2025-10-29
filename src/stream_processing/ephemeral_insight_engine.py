@@ -2,6 +2,7 @@ import collections
 import time
 import json
 
+
 class EphemeralInsightEngine:
     def __init__(self, observation_window_seconds=10, trigger_threshold=5):
         self._event_buffer = collections.deque()
@@ -12,16 +13,28 @@ class EphemeralInsightEngine:
         current_time = time.time()
         self._event_buffer.append((current_time, pulse))
 
-        while self._event_buffer and self._event_buffer[0][0] < current_time - self.observation_window_seconds:
+        while (
+            self._event_buffer
+            and self._event_buffer[0][0]
+            < current_time - self.observation_window_seconds
+        ):
             self._event_buffer.popleft()
 
     def generate_flash_insight(self):
         insight_count = len(self._event_buffer)
         if insight_count >= self.trigger_threshold:
-            return {"insight_level": "CRITICAL", "pulse_count": insight_count, "window_start": self._event_buffer[0][0] if self._event_buffer else None, "window_end": time.time()}
+            return {
+                "insight_level": "CRITICAL",
+                "pulse_count": insight_count,
+                "window_start": (
+                    self._event_buffer[0][0] if self._event_buffer else None
+                ),
+                "window_end": time.time(),
+            }
         return {"insight_level": "NORMAL", "pulse_count": insight_count}
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     engine = EphemeralInsightEngine(observation_window_seconds=3, trigger_threshold=4)
 
     for i in range(10):

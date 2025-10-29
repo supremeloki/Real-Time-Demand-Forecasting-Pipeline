@@ -2,12 +2,17 @@ import json
 from jsonschema import validate, ValidationError
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 class RealtimeSchemaValidator:
-    def __init__(self, schema_path: str = "data_artifacts/schemas/demand_event_schema.json"):
+    def __init__(
+        self, schema_path: str = "data_artifacts/schemas/demand_event_schema.json"
+    ):
         try:
-            with open(schema_path, 'r') as f:
+            with open(schema_path, "r") as f:
                 self.schema = json.load(f)
             logging.info(f"Loaded schema from: {schema_path}")
         except FileNotFoundError:
@@ -32,27 +37,25 @@ class RealtimeSchemaValidator:
             logging.error(f"An unexpected error occurred during validation: {e}")
             return False
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     validator = RealtimeSchemaValidator()
 
     # Example valid message
     valid_message = {
         "geohash_id": "dr5ru",
         "timestamp": "2025-10-19T10:30:00Z",
-        "request_count": 5
+        "request_count": 5,
     }
 
     # Example invalid message (missing request_count)
-    invalid_message = {
-        "geohash_id": "dr5ru",
-        "timestamp": "2025-10-19T10:35:00Z"
-    }
-    
+    invalid_message = {"geohash_id": "dr5ru", "timestamp": "2025-10-19T10:35:00Z"}
+
     # Example invalid message (wrong type)
     type_invalid_message = {
         "geohash_id": "dr5ru",
         "timestamp": "2025-10-19T10:35:00Z",
-        "request_count": "five"
+        "request_count": "five",
     }
 
     print(f"Validating message 1: {validator.validate_message(valid_message)}")

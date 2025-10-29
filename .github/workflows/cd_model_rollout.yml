@@ -15,14 +15,11 @@ jobs:
           python-version: '3.10'
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Configure AWS/GCP CLI
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # yamllint disable rule=line-length
+      - name: Configure Cloud CLI
         run: |
-          # aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          # aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          echo "Simulating cloud configuration"
+          echo "Cloud CLI configuration would be set up here with secrets:"
+          echo "AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY"
+          echo "For demo purposes, using simulation mode"
       - name: Build Docker Image
         run: |
           docker build -t snapp-demand-forecast-inference:latest -f deployments/docker/Dockerfile.inference .
@@ -33,11 +30,12 @@ jobs:
           # docker push registry.example.com/snapp-demand-forecast-inference:latest
           echo "Simulating push to Docker registry"
       - name: Deploy to Kubernetes
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        with:
-          args: apply -f deployments/kubernetes/k8s_model_deployment.yaml -f deployments/kubernetes/inference_hpa_ingress.yaml
+        run: |
+          # Note: kubectl deployment requires KUBE_CONFIG_DATA secret to be configured
+          # For demo purposes, we'll simulate the deployment
+          echo "Simulating Kubernetes deployment..."
+          echo "Would apply: deployments/kubernetes/k8s_model_deployment.yaml"
+          echo "Would apply: deployments/kubernetes/inference_hpa_ingress.yaml"
         continue-on-error: true
       - name: Promote Model to Production
         run: |

@@ -3,6 +3,7 @@ import random
 import json
 from typing import Any
 
+
 class OracleParameterNexus:
     def __init__(self, initial_params: dict):
         self._parameters = initial_params
@@ -20,13 +21,17 @@ class OracleParameterNexus:
         self._last_update_time = time.time()
 
     def get_status(self):
-        return {"parameters_count": len(self._parameters), "last_updated": self._last_update_time}
+        return {
+            "parameters_count": len(self._parameters),
+            "last_updated": self._last_update_time,
+        }
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     initial_config = {
         "model_learning_rate": 0.01,
         "feature_toggle_beta_ui": False,
-        "api_timeout_ms": 2000
+        "api_timeout_ms": 2000,
     }
     nexus = OracleParameterNexus(initial_config)
 
@@ -39,7 +44,7 @@ if __name__ == '__main__':
     new_updates = {
         "api_timeout_ms": 3000,
         "model_learning_rate": 0.005,
-        "new_experimental_param": "alpha_value"
+        "new_experimental_param": "alpha_value",
     }
     nexus.refresh_from_source(new_updates)
 

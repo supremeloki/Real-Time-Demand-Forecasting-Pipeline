@@ -1,8 +1,9 @@
 import sys
 import os
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, root_dir)
-sys.path.insert(0, os.path.join(root_dir, 'src'))
+sys.path.insert(0, os.path.join(root_dir, "src"))
 
 from kafka import KafkaConsumer
 import json
@@ -11,6 +12,7 @@ from src.utils.config_reader import ConfigReader
 from src.utils.logging_setup import setup_logging
 
 logger = setup_logging(__name__)
+
 
 class SnappKafkaConsumer:
     def __init__(self, topic: str, group_id: str, env: str = "dev"):
@@ -26,12 +28,14 @@ class SnappKafkaConsumer:
                 self.topic,
                 bootstrap_servers=self.bootstrap_servers,
                 group_id=self.group_id,
-                value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-                auto_offset_reset='earliest', # Start from beginning if no offset committed
+                value_deserializer=lambda m: json.loads(m.decode("utf-8")),
+                auto_offset_reset="earliest",  # Start from beginning if no offset committed
                 enable_auto_commit=True,
-                auto_commit_interval_ms=5000 # Commit every 5 seconds
+                auto_commit_interval_ms=5000,  # Commit every 5 seconds
             )
-            logger.info(f"Kafka consumer for topic {self.topic} (group: {self.group_id}) connected to {self.bootstrap_servers}")
+            logger.info(
+                f"Kafka consumer for topic {self.topic} (group: {self.group_id}) connected to {self.bootstrap_servers}"
+            )
             return consumer
         except Exception as e:
             logger.error(f"Failed to connect Kafka consumer: {e}")

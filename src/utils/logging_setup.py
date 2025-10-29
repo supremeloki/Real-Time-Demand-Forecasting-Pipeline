@@ -1,11 +1,13 @@
 import logging
 import sys
 import os
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, root_dir)
-sys.path.insert(0, os.path.join(root_dir, 'src'))
+sys.path.insert(0, os.path.join(root_dir, "src"))
 
 from src.utils.config_reader import ConfigReader
+
 
 def setup_logging(name: str):
     config = ConfigReader()
@@ -15,7 +17,9 @@ def setup_logging(name: str):
     logger.setLevel(log_level)
 
     if not logger.handlers:
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)

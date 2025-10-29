@@ -2,6 +2,7 @@ import xgboost as xgb
 import pandas as pd
 from typing import Dict, Any
 
+
 class XGBoostModel:
     def __init__(self, params: Dict[str, Any]):
         self.params = params
@@ -9,7 +10,9 @@ class XGBoostModel:
 
     def train(self, X_train: pd.DataFrame, y_train: pd.Series):
         dtrain = xgb.DMatrix(X_train, label=y_train)
-        self.model = xgb.train(self.params, dtrain, num_boost_round=self.params.get('num_boost_round', 100))
+        self.model = xgb.train(
+            self.params, dtrain, num_boost_round=self.params.get("num_boost_round", 100)
+        )
         return self.model
 
     def predict(self, X_test: pd.DataFrame) -> pd.Series:
@@ -30,4 +33,4 @@ class XGBoostModel:
     def get_feature_importance(self) -> Dict[str, float]:
         if not self.model:
             return {}
-        return self.model.get_score(importance_type='weight')
+        return self.model.get_score(importance_type="weight")
